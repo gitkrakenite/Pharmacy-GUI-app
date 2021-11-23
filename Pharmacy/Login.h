@@ -11,18 +11,41 @@ namespace Pharmacy {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+
+
+	using namespace MySql::Data::MySqlClient;
+
+
+
 	/// <summary>
 	/// Summary for Login
 	/// </summary>
 	public ref class Login : public System::Windows::Forms::Form
 	{
+
+
+		//Creating connectors
+
+		MySqlConnection^ sqlConn = gcnew MySqlConnection();
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand();
+
+		DataTable^ sqlDt = gcnew DataTable();
+
+		MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter();
+
+		MySqlDataReader^ sqlRd;
+
+
+
 	public:
 		Login(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			
+
+			PharmacyDB();
 		}
 
 	protected:
@@ -37,17 +60,20 @@ namespace Pharmacy {
 			}
 		}
 	private: System::Windows::Forms::Panel^ panel1;
+	private: System::Windows::Forms::Button^ LoginButton;
 	protected:
-	private: System::Windows::Forms::Button^ button1;
+
 
 
 
 	private: System::Windows::Forms::Panel^ panel4;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ LoginPwdtextBox;
+
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ LoginUsernametextBox;
+
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 	private: System::Windows::Forms::Panel^ panel2;
@@ -69,13 +95,13 @@ namespace Pharmacy {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(Login::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->LoginButton = (gcnew System::Windows::Forms::Button());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->LoginPwdtextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->LoginUsernametextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
@@ -90,13 +116,13 @@ namespace Pharmacy {
 			// panel1
 			// 
 			this->panel1->BackColor = System::Drawing::Color::White;
-			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->LoginButton);
 			this->panel1->Controls->Add(this->panel4);
 			this->panel1->Controls->Add(this->label2);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->LoginPwdtextBox);
 			this->panel1->Controls->Add(this->panel3);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->LoginUsernametextBox);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->pictureBox1);
 			this->panel1->Location = System::Drawing::Point(12, 12);
@@ -104,19 +130,19 @@ namespace Pharmacy {
 			this->panel1->Size = System::Drawing::Size(725, 770);
 			this->panel1->TabIndex = 1;
 			// 
-			// button1
+			// LoginButton
 			// 
-			this->button1->BackColor = System::Drawing::Color::Teal;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->LoginButton->BackColor = System::Drawing::Color::Teal;
+			this->LoginButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::White;
-			this->button1->Location = System::Drawing::Point(236, 530);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(272, 75);
-			this->button1->TabIndex = 12;
-			this->button1->Text = L"Log In";
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &Login::button1_Click);
+			this->LoginButton->ForeColor = System::Drawing::Color::White;
+			this->LoginButton->Location = System::Drawing::Point(236, 530);
+			this->LoginButton->Name = L"LoginButton";
+			this->LoginButton->Size = System::Drawing::Size(272, 75);
+			this->LoginButton->TabIndex = 12;
+			this->LoginButton->Text = L"Log In";
+			this->LoginButton->UseVisualStyleBackColor = false;
+			this->LoginButton->Click += gcnew System::EventHandler(this, &Login::button1_Click);
 			// 
 			// panel4
 			// 
@@ -138,17 +164,17 @@ namespace Pharmacy {
 			this->label2->TabIndex = 7;
 			this->label2->Text = L"Enter Password";
 			// 
-			// textBox2
+			// LoginPwdtextBox
 			// 
-			this->textBox2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->LoginPwdtextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->LoginPwdtextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox2->Location = System::Drawing::Point(339, 419);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(342, 24);
-			this->textBox2->TabIndex = 6;
-			this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox2->UseSystemPasswordChar = true;
+			this->LoginPwdtextBox->Location = System::Drawing::Point(339, 419);
+			this->LoginPwdtextBox->Name = L"LoginPwdtextBox";
+			this->LoginPwdtextBox->Size = System::Drawing::Size(342, 24);
+			this->LoginPwdtextBox->TabIndex = 6;
+			this->LoginPwdtextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->LoginPwdtextBox->UseSystemPasswordChar = true;
 			// 
 			// panel3
 			// 
@@ -170,16 +196,17 @@ namespace Pharmacy {
 			this->label3->TabIndex = 4;
 			this->label3->Text = L"Enter Username";
 			// 
-			// textBox1
+			// LoginUsernametextBox
 			// 
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->LoginUsernametextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->LoginUsernametextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(339, 339);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(342, 24);
-			this->textBox1->TabIndex = 3;
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->LoginUsernametextBox->Location = System::Drawing::Point(339, 339);
+			this->LoginUsernametextBox->Name = L"LoginUsernametextBox";
+			this->LoginUsernametextBox->Size = System::Drawing::Size(342, 24);
+			this->LoginUsernametextBox->TabIndex = 3;
+			this->LoginUsernametextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->LoginUsernametextBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Login::LoginUsernametextBox_KeyPress);
 			// 
 			// label1
 			// 
@@ -256,24 +283,97 @@ namespace Pharmacy {
 			this->ResumeLayout(false);
 
 		}
+
+
+
+
+		private: System::Void PharmacyDB()
+		{
+			sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+			sqlConn->Open();
+
+			sqlCmd->Connection = sqlConn;
+
+			sqlCmd->CommandText = "SELECT * FROM users ";
+
+			sqlRd = sqlCmd->ExecuteReader();
+
+			sqlDt->Load(sqlRd);
+
+			sqlRd->Close();
+
+			sqlConn->Close();
+
+		}
+
+
+
+
+
 #pragma endregion
 	private: System::Void Login_Load(System::Object^ sender, System::EventArgs^ e) {
 	}
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
 
-	this->Hide();
+	if (LoginUsernametextBox->Text == "" || LoginPwdtextBox->Text == "") {
+
+		MessageBox::Show("Please enter all details", "", MessageBoxButtons::OK, MessageBoxIcon::Stop);
 
 
-	Landingpage^ myLandingPage = gcnew Landingpage();
+	}
 
-	myLandingPage->ShowDialog();
+	else {
+
+		this->Hide();
+
+
+		Landingpage^ myLandingPage = gcnew Landingpage();
+
+		myLandingPage->ShowDialog();
+	}
+
+
+	
 
 
 }
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	Application::Exit();
+	System::Windows::Forms::DialogResult Ifexit;
+
+	Ifexit = MessageBox::Show("Are you sure you want to exit?", "", MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+
+	if (Ifexit == System::Windows::Forms::DialogResult::Yes) {
+		Application::Exit();
+	};
+	
+}
+private: System::Void LoginUsernametextBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+
+	try
+
+	{
+
+
+		if (e->KeyChar == (Char)13) {
+
+			DataView^ dv = sqlDt->DefaultView;
+
+			dv->RowFilter = String::Format("username like '%{0}%' ", LoginUsernametextBox->Text);
+			//dataGridView1->DataSource = dv->ToTable();
+
+		}
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
 }
 };
 }

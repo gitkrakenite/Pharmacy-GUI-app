@@ -1,0 +1,14 @@
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.vcxproj.AssemblyReference.cache
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Calculator.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Inventory.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Landingpage.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Login.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.MyForm.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Patients.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Reports.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Sales.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Staff.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.Suppliers.resources
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.vcxproj.GenerateResource.cache
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\x64\Debug\Pharmacy.exe.config
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\x64\Debug\Pharmacy.exe.config

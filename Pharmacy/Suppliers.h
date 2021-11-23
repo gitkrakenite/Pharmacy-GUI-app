@@ -9,18 +9,43 @@ namespace Pharmacy {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+
+	//Database library
+	using namespace MySql::Data::MySqlClient;
+
+
+
 	/// <summary>
 	/// Summary for Suppliers
 	/// </summary>
 	public ref class Suppliers : public System::Windows::Forms::Form
 	{
+
+
+
+		//Creating connectors
+
+		MySqlConnection^ sqlConn = gcnew MySqlConnection();
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand();
+
+		DataTable^ sqlDt = gcnew DataTable();
+
+		MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter();
+
+		MySqlDataReader^ sqlRd;
+
+
+
 	public:
 		Suppliers(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			
+
+			//Calling
+			PharmacyDB();
 		}
 
 	protected:
@@ -37,51 +62,75 @@ namespace Pharmacy {
 	private: System::Windows::Forms::Label^ label11;
 	protected:
 	private: System::Windows::Forms::Panel^ panel2;
-	private: System::Windows::Forms::Button^ button5;
-	private: System::Windows::Forms::Button^ button4;
-	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::Button^ DeleteButton;
+
+	private: System::Windows::Forms::Button^ UpdateButton;
+
+	private: System::Windows::Forms::Button^ ResetButton;
+
+	private: System::Windows::Forms::Button^ SaveButton;
+
 	private: System::Windows::Forms::Panel^ panel1;
-	private: System::Windows::Forms::TextBox^ textBox6;
+
+
+
 
 	private: System::Windows::Forms::Panel^ panel6;
-	private: System::Windows::Forms::TextBox^ textBox4;
-	private: System::Windows::Forms::Panel^ panel3;
+
+
+
 	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ AmountTextBox;
+
+
 	private: System::Windows::Forms::Panel^ panel7;
 	private: System::Windows::Forms::Label^ label4;
-	private: System::Windows::Forms::Panel^ panel10;
-	private: System::Windows::Forms::Label^ label6;
+
+
 	private: System::Windows::Forms::Panel^ panel4;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ NameTextBox;
+
 	private: System::Windows::Forms::Panel^ panel5;
-	private: System::Windows::Forms::TextBox^ textBox1;
-	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::TextBox^ RefTextBox;
+
+
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label1;
-	private: System::Windows::Forms::TextBox^ textBox12;
+	private: System::Windows::Forms::TextBox^ MobileACTextBox;
+
 	private: System::Windows::Forms::Panel^ panel15;
 	private: System::Windows::Forms::Label^ label12;
-	private: System::Windows::Forms::TextBox^ textBox11;
+	private: System::Windows::Forms::TextBox^ BankACTextBox1;
+
 	private: System::Windows::Forms::Panel^ panel8;
 	private: System::Windows::Forms::Label^ label7;
-	private: System::Windows::Forms::TextBox^ textBox7;
+	private: System::Windows::Forms::TextBox^ ProducTextBox;
+
 	private: System::Windows::Forms::Panel^ panel9;
-	private: System::Windows::Forms::TextBox^ textBox5;
-	private: System::Windows::Forms::Panel^ panel13;
-	private: System::Windows::Forms::Panel^ panel14;
-	private: System::Windows::Forms::Label^ label9;
-	private: System::Windows::Forms::TextBox^ textBox8;
-	private: System::Windows::Forms::Label^ label10;
+
+
+
+
+
+
 	private: System::Windows::Forms::Panel^ panel11;
 	private: System::Windows::Forms::Panel^ panel12;
 	private: System::Windows::Forms::Label^ label8;
 	private: System::Windows::Forms::TextBox^ textBox9;
-	private: System::Windows::Forms::TextBox^ textBox10;
+	private: System::Windows::Forms::TextBox^ SearchTextBox;
+
 	private: System::Windows::Forms::Label^ label13;
 	private: System::Windows::Forms::Panel^ panel16;
 	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::Button^ button6;
+	private: System::Windows::Forms::TextBox^ BPTextBox;
+	private: System::Windows::Forms::Panel^ panel3;
+	private: System::Windows::Forms::Label^ label3;
+	private: System::Windows::Forms::TextBox^ ContactTextBox;
+	private: System::Windows::Forms::Panel^ panel10;
+	private: System::Windows::Forms::Label^ label6;
+	private: System::Windows::Forms::Button^ SearchButton;
 
 	private:
 		/// <summary>
@@ -98,55 +147,53 @@ namespace Pharmacy {
 		{
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->button5 = (gcnew System::Windows::Forms::Button());
-			this->button4 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->DeleteButton = (gcnew System::Windows::Forms::Button());
+			this->UpdateButton = (gcnew System::Windows::Forms::Button());
+			this->ResetButton = (gcnew System::Windows::Forms::Button());
+			this->SaveButton = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->textBox12 = (gcnew System::Windows::Forms::TextBox());
-			this->panel15 = (gcnew System::Windows::Forms::Panel());
-			this->label12 = (gcnew System::Windows::Forms::Label());
-			this->textBox11 = (gcnew System::Windows::Forms::TextBox());
-			this->panel8 = (gcnew System::Windows::Forms::Panel());
-			this->label7 = (gcnew System::Windows::Forms::Label());
-			this->textBox7 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->panel6 = (gcnew System::Windows::Forms::Panel());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->BPTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
-			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
-			this->panel7 = (gcnew System::Windows::Forms::Panel());
-			this->label4 = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->ContactTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel10 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
+			this->MobileACTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->panel15 = (gcnew System::Windows::Forms::Panel());
+			this->label12 = (gcnew System::Windows::Forms::Label());
+			this->BankACTextBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->panel8 = (gcnew System::Windows::Forms::Panel());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->ProducTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->panel6 = (gcnew System::Windows::Forms::Panel());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->AmountTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->panel7 = (gcnew System::Windows::Forms::Panel());
+			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->NameTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->label3 = (gcnew System::Windows::Forms::Label());
+			this->RefTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel9 = (gcnew System::Windows::Forms::Panel());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
-			this->panel13 = (gcnew System::Windows::Forms::Panel());
-			this->panel14 = (gcnew System::Windows::Forms::Panel());
-			this->label9 = (gcnew System::Windows::Forms::Label());
-			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
-			this->label10 = (gcnew System::Windows::Forms::Label());
+			this->SearchButton = (gcnew System::Windows::Forms::Button());
 			this->panel11 = (gcnew System::Windows::Forms::Panel());
 			this->panel12 = (gcnew System::Windows::Forms::Panel());
 			this->label8 = (gcnew System::Windows::Forms::Label());
 			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox10 = (gcnew System::Windows::Forms::TextBox());
+			this->SearchTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->panel16 = (gcnew System::Windows::Forms::Panel());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel2->SuspendLayout();
 			this->panel1->SuspendLayout();
 			this->panel9->SuspendLayout();
-			this->panel13->SuspendLayout();
 			this->panel11->SuspendLayout();
+			this->panel16->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label11
@@ -164,118 +211,182 @@ namespace Pharmacy {
 			// panel2
 			// 
 			this->panel2->BackColor = System::Drawing::Color::White;
-			this->panel2->Controls->Add(this->button5);
-			this->panel2->Controls->Add(this->button4);
-			this->panel2->Controls->Add(this->button3);
-			this->panel2->Controls->Add(this->button2);
+			this->panel2->Controls->Add(this->DeleteButton);
+			this->panel2->Controls->Add(this->UpdateButton);
+			this->panel2->Controls->Add(this->ResetButton);
+			this->panel2->Controls->Add(this->SaveButton);
 			this->panel2->Location = System::Drawing::Point(23, 716);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(679, 184);
 			this->panel2->TabIndex = 16;
 			// 
-			// button5
+			// DeleteButton
 			// 
-			this->button5->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->DeleteButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button5->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->DeleteButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button5->ForeColor = System::Drawing::Color::White;
-			this->button5->Location = System::Drawing::Point(419, 99);
-			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(232, 65);
-			this->button5->TabIndex = 7;
-			this->button5->Text = L"Delete";
-			this->button5->UseVisualStyleBackColor = false;
+			this->DeleteButton->ForeColor = System::Drawing::Color::White;
+			this->DeleteButton->Location = System::Drawing::Point(419, 99);
+			this->DeleteButton->Name = L"DeleteButton";
+			this->DeleteButton->Size = System::Drawing::Size(232, 65);
+			this->DeleteButton->TabIndex = 7;
+			this->DeleteButton->Text = L"Delete";
+			this->DeleteButton->UseVisualStyleBackColor = false;
+			this->DeleteButton->Click += gcnew System::EventHandler(this, &Suppliers::DeleteButton_Click);
 			// 
-			// button4
+			// UpdateButton
 			// 
-			this->button4->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->UpdateButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->UpdateButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button4->ForeColor = System::Drawing::Color::White;
-			this->button4->Location = System::Drawing::Point(35, 103);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(232, 65);
-			this->button4->TabIndex = 6;
-			this->button4->Text = L"Update";
-			this->button4->UseVisualStyleBackColor = false;
+			this->UpdateButton->ForeColor = System::Drawing::Color::White;
+			this->UpdateButton->Location = System::Drawing::Point(35, 103);
+			this->UpdateButton->Name = L"UpdateButton";
+			this->UpdateButton->Size = System::Drawing::Size(232, 65);
+			this->UpdateButton->TabIndex = 6;
+			this->UpdateButton->Text = L"Update";
+			this->UpdateButton->UseVisualStyleBackColor = false;
+			this->UpdateButton->Click += gcnew System::EventHandler(this, &Suppliers::UpdateButton_Click);
 			// 
-			// button3
+			// ResetButton
 			// 
-			this->button3->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->ResetButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->ResetButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button3->ForeColor = System::Drawing::Color::White;
-			this->button3->Location = System::Drawing::Point(419, 15);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(232, 65);
-			this->button3->TabIndex = 5;
-			this->button3->Text = L"Reset";
-			this->button3->UseVisualStyleBackColor = false;
+			this->ResetButton->ForeColor = System::Drawing::Color::White;
+			this->ResetButton->Location = System::Drawing::Point(419, 15);
+			this->ResetButton->Name = L"ResetButton";
+			this->ResetButton->Size = System::Drawing::Size(232, 65);
+			this->ResetButton->TabIndex = 5;
+			this->ResetButton->Text = L"Reset";
+			this->ResetButton->UseVisualStyleBackColor = false;
+			this->ResetButton->Click += gcnew System::EventHandler(this, &Suppliers::ResetButton_Click);
 			// 
-			// button2
+			// SaveButton
 			// 
-			this->button2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->SaveButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->SaveButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::Color::White;
-			this->button2->Location = System::Drawing::Point(35, 15);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(232, 65);
-			this->button2->TabIndex = 4;
-			this->button2->Text = L"Save";
-			this->button2->UseVisualStyleBackColor = false;
+			this->SaveButton->ForeColor = System::Drawing::Color::White;
+			this->SaveButton->Location = System::Drawing::Point(35, 15);
+			this->SaveButton->Name = L"SaveButton";
+			this->SaveButton->Size = System::Drawing::Size(232, 65);
+			this->SaveButton->TabIndex = 4;
+			this->SaveButton->Text = L"Save";
+			this->SaveButton->UseVisualStyleBackColor = false;
+			this->SaveButton->Click += gcnew System::EventHandler(this, &Suppliers::SaveButton_Click);
 			// 
 			// panel1
 			// 
 			this->panel1->BackColor = System::Drawing::Color::White;
-			this->panel1->Controls->Add(this->textBox12);
-			this->panel1->Controls->Add(this->panel15);
-			this->panel1->Controls->Add(this->label12);
-			this->panel1->Controls->Add(this->textBox11);
-			this->panel1->Controls->Add(this->panel8);
-			this->panel1->Controls->Add(this->label7);
-			this->panel1->Controls->Add(this->textBox7);
-			this->panel1->Controls->Add(this->textBox6);
-			this->panel1->Controls->Add(this->panel6);
-			this->panel1->Controls->Add(this->textBox4);
+			this->panel1->Controls->Add(this->BPTextBox);
 			this->panel1->Controls->Add(this->panel3);
-			this->panel1->Controls->Add(this->label5);
-			this->panel1->Controls->Add(this->textBox3);
-			this->panel1->Controls->Add(this->panel7);
-			this->panel1->Controls->Add(this->label4);
+			this->panel1->Controls->Add(this->label3);
+			this->panel1->Controls->Add(this->ContactTextBox);
 			this->panel1->Controls->Add(this->panel10);
 			this->panel1->Controls->Add(this->label6);
+			this->panel1->Controls->Add(this->MobileACTextBox);
+			this->panel1->Controls->Add(this->panel15);
+			this->panel1->Controls->Add(this->label12);
+			this->panel1->Controls->Add(this->BankACTextBox1);
+			this->panel1->Controls->Add(this->panel8);
+			this->panel1->Controls->Add(this->label7);
+			this->panel1->Controls->Add(this->ProducTextBox);
+			this->panel1->Controls->Add(this->panel6);
+			this->panel1->Controls->Add(this->label5);
+			this->panel1->Controls->Add(this->AmountTextBox);
+			this->panel1->Controls->Add(this->panel7);
+			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->panel4);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->NameTextBox);
 			this->panel1->Controls->Add(this->panel5);
-			this->panel1->Controls->Add(this->textBox1);
-			this->panel1->Controls->Add(this->label3);
+			this->panel1->Controls->Add(this->RefTextBox);
 			this->panel1->Controls->Add(this->label2);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Location = System::Drawing::Point(23, 103);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(679, 602);
+			this->panel1->Size = System::Drawing::Size(737, 602);
 			this->panel1->TabIndex = 15;
 			// 
-			// textBox12
+			// BPTextBox
 			// 
-			this->textBox12->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox12->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->BPTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->BPTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox12->Location = System::Drawing::Point(305, 533);
-			this->textBox12->Name = L"textBox12";
-			this->textBox12->Size = System::Drawing::Size(342, 27);
-			this->textBox12->TabIndex = 40;
-			this->textBox12->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->BPTextBox->Location = System::Drawing::Point(341, 317);
+			this->BPTextBox->Name = L"BPTextBox";
+			this->BPTextBox->Size = System::Drawing::Size(340, 27);
+			this->BPTextBox->TabIndex = 46;
+			this->BPTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			// 
+			// panel3
+			// 
+			this->panel3->BackColor = System::Drawing::Color::DarkSlateGray;
+			this->panel3->Location = System::Drawing::Point(341, 344);
+			this->panel3->Name = L"panel3";
+			this->panel3->Size = System::Drawing::Size(342, 4);
+			this->panel3->TabIndex = 45;
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label3->Location = System::Drawing::Point(3, 313);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(311, 31);
+			this->label3->TabIndex = 44;
+			this->label3->Text = L"Total Buying Price (Ksh.)";
+			// 
+			// ContactTextBox
+			// 
+			this->ContactTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->ContactTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->ContactTextBox->Location = System::Drawing::Point(308, 399);
+			this->ContactTextBox->Name = L"ContactTextBox";
+			this->ContactTextBox->Size = System::Drawing::Size(340, 27);
+			this->ContactTextBox->TabIndex = 43;
+			this->ContactTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			// 
+			// panel10
+			// 
+			this->panel10->BackColor = System::Drawing::Color::DarkSlateGray;
+			this->panel10->Location = System::Drawing::Point(308, 426);
+			this->panel10->Name = L"panel10";
+			this->panel10->Size = System::Drawing::Size(342, 4);
+			this->panel10->TabIndex = 42;
+			// 
+			// label6
+			// 
+			this->label6->AutoSize = true;
+			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->label6->Location = System::Drawing::Point(21, 395);
+			this->label6->Name = L"label6";
+			this->label6->Size = System::Drawing::Size(165, 31);
+			this->label6->TabIndex = 41;
+			this->label6->Text = L"Contact Info";
+			// 
+			// MobileACTextBox
+			// 
+			this->MobileACTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->MobileACTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->MobileACTextBox->Location = System::Drawing::Point(308, 535);
+			this->MobileACTextBox->Name = L"MobileACTextBox";
+			this->MobileACTextBox->Size = System::Drawing::Size(342, 27);
+			this->MobileACTextBox->TabIndex = 40;
+			this->MobileACTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel15
 			// 
 			this->panel15->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel15->Location = System::Drawing::Point(305, 560);
+			this->panel15->Location = System::Drawing::Point(308, 562);
 			this->panel15->Name = L"panel15";
 			this->panel15->Size = System::Drawing::Size(342, 4);
 			this->panel15->TabIndex = 39;
@@ -285,27 +396,27 @@ namespace Pharmacy {
 			this->label12->AutoSize = true;
 			this->label12->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label12->Location = System::Drawing::Point(17, 533);
+			this->label12->Location = System::Drawing::Point(20, 535);
 			this->label12->Name = L"label12";
 			this->label12->Size = System::Drawing::Size(248, 31);
 			this->label12->TabIndex = 38;
 			this->label12->Text = L"Mobile A/C  Details";
 			// 
-			// textBox11
+			// BankACTextBox1
 			// 
-			this->textBox11->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox11->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->BankACTextBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->BankACTextBox1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox11->Location = System::Drawing::Point(306, 457);
-			this->textBox11->Name = L"textBox11";
-			this->textBox11->Size = System::Drawing::Size(342, 27);
-			this->textBox11->TabIndex = 37;
-			this->textBox11->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->BankACTextBox1->Location = System::Drawing::Point(309, 459);
+			this->BankACTextBox1->Name = L"BankACTextBox1";
+			this->BankACTextBox1->Size = System::Drawing::Size(342, 27);
+			this->BankACTextBox1->TabIndex = 37;
+			this->BankACTextBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel8
 			// 
 			this->panel8->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel8->Location = System::Drawing::Point(306, 484);
+			this->panel8->Location = System::Drawing::Point(309, 486);
 			this->panel8->Name = L"panel8";
 			this->panel8->Size = System::Drawing::Size(342, 4);
 			this->panel8->TabIndex = 36;
@@ -315,33 +426,22 @@ namespace Pharmacy {
 			this->label7->AutoSize = true;
 			this->label7->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label7->Location = System::Drawing::Point(18, 457);
+			this->label7->Location = System::Drawing::Point(21, 459);
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(223, 31);
 			this->label7->TabIndex = 35;
 			this->label7->Text = L"Bank A/C  Details";
 			// 
-			// textBox7
+			// ProducTextBox
 			// 
-			this->textBox7->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox7->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->ProducTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->ProducTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox7->Location = System::Drawing::Point(311, 159);
-			this->textBox7->Name = L"textBox7";
-			this->textBox7->Size = System::Drawing::Size(340, 27);
-			this->textBox7->TabIndex = 34;
-			this->textBox7->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// textBox6
-			// 
-			this->textBox6->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->textBox6->Location = System::Drawing::Point(307, 240);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(340, 27);
-			this->textBox6->TabIndex = 33;
-			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->ProducTextBox->Location = System::Drawing::Point(311, 159);
+			this->ProducTextBox->Name = L"ProducTextBox";
+			this->ProducTextBox->Size = System::Drawing::Size(340, 27);
+			this->ProducTextBox->TabIndex = 34;
+			this->ProducTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel6
 			// 
@@ -350,25 +450,6 @@ namespace Pharmacy {
 			this->panel6->Name = L"panel6";
 			this->panel6->Size = System::Drawing::Size(342, 4);
 			this->panel6->TabIndex = 31;
-			// 
-			// textBox4
-			// 
-			this->textBox4->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->textBox4->Location = System::Drawing::Point(307, 379);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(342, 27);
-			this->textBox4->TabIndex = 29;
-			this->textBox4->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// panel3
-			// 
-			this->panel3->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel3->Location = System::Drawing::Point(307, 406);
-			this->panel3->Name = L"panel3";
-			this->panel3->Size = System::Drawing::Size(342, 4);
-			this->panel3->TabIndex = 28;
 			// 
 			// label5
 			// 
@@ -381,21 +462,21 @@ namespace Pharmacy {
 			this->label5->TabIndex = 27;
 			this->label5->Text = L"Product";
 			// 
-			// textBox3
+			// AmountTextBox
 			// 
-			this->textBox3->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->AmountTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->AmountTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox3->Location = System::Drawing::Point(307, 308);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(342, 27);
-			this->textBox3->TabIndex = 26;
-			this->textBox3->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->AmountTextBox->Location = System::Drawing::Point(311, 241);
+			this->AmountTextBox->Name = L"AmountTextBox";
+			this->AmountTextBox->Size = System::Drawing::Size(342, 27);
+			this->AmountTextBox->TabIndex = 26;
+			this->AmountTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel7
 			// 
 			this->panel7->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel7->Location = System::Drawing::Point(307, 335);
+			this->panel7->Location = System::Drawing::Point(311, 268);
 			this->panel7->Name = L"panel7";
 			this->panel7->Size = System::Drawing::Size(342, 4);
 			this->panel7->TabIndex = 25;
@@ -405,30 +486,11 @@ namespace Pharmacy {
 			this->label4->AutoSize = true;
 			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->Location = System::Drawing::Point(18, 308);
+			this->label4->Location = System::Drawing::Point(20, 241);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(214, 31);
+			this->label4->Size = System::Drawing::Size(243, 31);
 			this->label4->TabIndex = 24;
-			this->label4->Text = L"Telephone No. 2";
-			// 
-			// panel10
-			// 
-			this->panel10->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel10->Location = System::Drawing::Point(307, 267);
-			this->panel10->Name = L"panel10";
-			this->panel10->Size = System::Drawing::Size(342, 4);
-			this->panel10->TabIndex = 21;
-			// 
-			// label6
-			// 
-			this->label6->AutoSize = true;
-			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label6->Location = System::Drawing::Point(19, 240);
-			this->label6->Name = L"label6";
-			this->label6->Size = System::Drawing::Size(214, 31);
-			this->label6->TabIndex = 19;
-			this->label6->Text = L"Telephone No. 1";
+			this->label4->Text = L"Amount in packets";
 			// 
 			// panel4
 			// 
@@ -438,16 +500,16 @@ namespace Pharmacy {
 			this->panel4->Size = System::Drawing::Size(342, 4);
 			this->panel4->TabIndex = 12;
 			// 
-			// textBox2
+			// NameTextBox
 			// 
-			this->textBox2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->NameTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->NameTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox2->Location = System::Drawing::Point(309, 94);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(342, 27);
-			this->textBox2->TabIndex = 11;
-			this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->NameTextBox->Location = System::Drawing::Point(309, 94);
+			this->NameTextBox->Name = L"NameTextBox";
+			this->NameTextBox->Size = System::Drawing::Size(342, 27);
+			this->NameTextBox->TabIndex = 11;
+			this->NameTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel5
 			// 
@@ -457,27 +519,16 @@ namespace Pharmacy {
 			this->panel5->Size = System::Drawing::Size(342, 4);
 			this->panel5->TabIndex = 10;
 			// 
-			// textBox1
+			// RefTextBox
 			// 
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->RefTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->RefTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(309, 28);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(342, 27);
-			this->textBox1->TabIndex = 9;
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			// 
-			// label3
-			// 
-			this->label3->AutoSize = true;
-			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(19, 379);
-			this->label3->Name = L"label3";
-			this->label3->Size = System::Drawing::Size(185, 31);
-			this->label3->TabIndex = 2;
-			this->label3->Text = L"Email Address";
+			this->RefTextBox->Location = System::Drawing::Point(309, 28);
+			this->RefTextBox->Name = L"RefTextBox";
+			this->RefTextBox->Size = System::Drawing::Size(342, 27);
+			this->RefTextBox->TabIndex = 9;
+			this->RefTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label2
 			// 
@@ -505,81 +556,28 @@ namespace Pharmacy {
 			// 
 			this->panel9->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)),
 				static_cast<System::Int32>(static_cast<System::Byte>(224)));
-			this->panel9->Controls->Add(this->textBox5);
-			this->panel9->Controls->Add(this->panel13);
-			this->panel9->Controls->Add(this->label10);
+			this->panel9->Controls->Add(this->SearchButton);
 			this->panel9->Controls->Add(this->panel11);
-			this->panel9->Controls->Add(this->textBox10);
+			this->panel9->Controls->Add(this->SearchTextBox);
 			this->panel9->Controls->Add(this->label13);
-			this->panel9->Location = System::Drawing::Point(705, 108);
+			this->panel9->Location = System::Drawing::Point(766, 108);
 			this->panel9->Name = L"panel9";
-			this->panel9->Size = System::Drawing::Size(1184, 72);
+			this->panel9->Size = System::Drawing::Size(1123, 72);
 			this->panel9->TabIndex = 19;
 			// 
-			// textBox5
+			// SearchButton
 			// 
-			this->textBox5->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox5->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->SearchButton->BackColor = System::Drawing::Color::DarkSlateGray;
+			this->SearchButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox5->Location = System::Drawing::Point(807, 29);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(261, 27);
-			this->textBox5->TabIndex = 17;
-			// 
-			// panel13
-			// 
-			this->panel13->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel13->Controls->Add(this->panel14);
-			this->panel13->Controls->Add(this->label9);
-			this->panel13->Controls->Add(this->textBox8);
-			this->panel13->Location = System::Drawing::Point(807, 59);
-			this->panel13->Name = L"panel13";
-			this->panel13->Size = System::Drawing::Size(261, 4);
-			this->panel13->TabIndex = 16;
-			// 
-			// panel14
-			// 
-			this->panel14->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel14->Location = System::Drawing::Point(429, 0);
-			this->panel14->Name = L"panel14";
-			this->panel14->Size = System::Drawing::Size(326, 4);
-			this->panel14->TabIndex = 16;
-			// 
-			// label9
-			// 
-			this->label9->AutoSize = true;
-			this->label9->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label9->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label9->Location = System::Drawing::Point(207, -23);
-			this->label9->Name = L"label9";
-			this->label9->Size = System::Drawing::Size(177, 27);
-			this->label9->TabIndex = 14;
-			this->label9->Text = L"Search By Name";
-			// 
-			// textBox8
-			// 
-			this->textBox8->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox8->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->textBox8->Location = System::Drawing::Point(429, -33);
-			this->textBox8->Name = L"textBox8";
-			this->textBox8->Size = System::Drawing::Size(326, 27);
-			this->textBox8->TabIndex = 15;
-			// 
-			// label10
-			// 
-			this->label10->AutoSize = true;
-			this->label10->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label10->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label10->Location = System::Drawing::Point(562, 28);
-			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(211, 27);
-			this->label10->TabIndex = 14;
-			this->label10->Text = L"By Company Name:";
+			this->SearchButton->ForeColor = System::Drawing::SystemColors::ButtonFace;
+			this->SearchButton->Location = System::Drawing::Point(953, 14);
+			this->SearchButton->Name = L"SearchButton";
+			this->SearchButton->Size = System::Drawing::Size(194, 51);
+			this->SearchButton->TabIndex = 21;
+			this->SearchButton->Text = L"Search";
+			this->SearchButton->UseVisualStyleBackColor = false;
+			this->SearchButton->Click += gcnew System::EventHandler(this, &Suppliers::SearchButton_Click);
 			// 
 			// panel11
 			// 
@@ -587,9 +585,9 @@ namespace Pharmacy {
 			this->panel11->Controls->Add(this->panel12);
 			this->panel11->Controls->Add(this->label8);
 			this->panel11->Controls->Add(this->textBox9);
-			this->panel11->Location = System::Drawing::Point(278, 58);
+			this->panel11->Location = System::Drawing::Point(323, 56);
 			this->panel11->Name = L"panel11";
-			this->panel11->Size = System::Drawing::Size(158, 4);
+			this->panel11->Size = System::Drawing::Size(617, 4);
 			this->panel11->TabIndex = 13;
 			// 
 			// panel12
@@ -623,15 +621,17 @@ namespace Pharmacy {
 			this->textBox9->Size = System::Drawing::Size(326, 27);
 			this->textBox9->TabIndex = 15;
 			// 
-			// textBox10
+			// SearchTextBox
 			// 
-			this->textBox10->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox10->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->SearchTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->SearchTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox10->Location = System::Drawing::Point(278, 25);
-			this->textBox10->Name = L"textBox10";
-			this->textBox10->Size = System::Drawing::Size(158, 27);
-			this->textBox10->TabIndex = 1;
+			this->SearchTextBox->Location = System::Drawing::Point(323, 23);
+			this->SearchTextBox->Name = L"SearchTextBox";
+			this->SearchTextBox->Size = System::Drawing::Size(617, 27);
+			this->SearchTextBox->TabIndex = 1;
+			this->SearchTextBox->TextChanged += gcnew System::EventHandler(this, &Suppliers::SearchTextBox_TextChanged);
+			this->SearchTextBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Suppliers::SearchTextBox_KeyPress);
 			// 
 			// label13
 			// 
@@ -640,19 +640,46 @@ namespace Pharmacy {
 				static_cast<System::Byte>(0)));
 			this->label13->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label13->Location = System::Drawing::Point(15, 28);
+			this->label13->Location = System::Drawing::Point(9, 28);
 			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(234, 27);
+			this->label13->Size = System::Drawing::Size(284, 27);
 			this->label13->TabIndex = 0;
-			this->label13->Text = L"Search By Supplier ID:";
+			this->label13->Text = L"Search By Company Name:";
 			// 
 			// panel16
 			// 
 			this->panel16->BackColor = System::Drawing::Color::White;
-			this->panel16->Location = System::Drawing::Point(707, 181);
+			this->panel16->Controls->Add(this->dataGridView1);
+			this->panel16->Controls->Add(this->button6);
+			this->panel16->Location = System::Drawing::Point(766, 181);
 			this->panel16->Name = L"panel16";
-			this->panel16->Size = System::Drawing::Size(1424, 719);
+			this->panel16->Size = System::Drawing::Size(1123, 719);
 			this->panel16->TabIndex = 18;
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Location = System::Drawing::Point(18, 16);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersWidth = 51;
+			this->dataGridView1->RowTemplate->Height = 24;
+			this->dataGridView1->Size = System::Drawing::Size(1150, 636);
+			this->dataGridView1->TabIndex = 22;
+			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &Suppliers::dataGridView1_CellClick);
+			// 
+			// button6
+			// 
+			this->button6->BackColor = System::Drawing::Color::Black;
+			this->button6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button6->ForeColor = System::Drawing::SystemColors::ButtonFace;
+			this->button6->Location = System::Drawing::Point(622, 658);
+			this->button6->Name = L"button6";
+			this->button6->Size = System::Drawing::Size(557, 45);
+			this->button6->TabIndex = 21;
+			this->button6->Text = L"Not finding something\?";
+			this->button6->UseVisualStyleBackColor = false;
+			this->button6->Click += gcnew System::EventHandler(this, &Suppliers::button6_Click);
 			// 
 			// button1
 			// 
@@ -660,7 +687,7 @@ namespace Pharmacy {
 			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
 			this->button1->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->button1->Location = System::Drawing::Point(1714, 909);
+			this->button1->Location = System::Drawing::Point(1590, 915);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(285, 61);
 			this->button1->TabIndex = 20;
@@ -673,7 +700,7 @@ namespace Pharmacy {
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Teal;
-			this->ClientSize = System::Drawing::Size(2143, 997);
+			this->ClientSize = System::Drawing::Size(1914, 997);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->panel9);
 			this->Controls->Add(this->panel16);
@@ -682,23 +709,355 @@ namespace Pharmacy {
 			this->Controls->Add(this->panel1);
 			this->Name = L"Suppliers";
 			this->Text = L"Suppliers";
+			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
+			this->Load += gcnew System::EventHandler(this, &Suppliers::Suppliers_Load);
 			this->panel2->ResumeLayout(false);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
 			this->panel9->ResumeLayout(false);
 			this->panel9->PerformLayout();
-			this->panel13->ResumeLayout(false);
-			this->panel13->PerformLayout();
 			this->panel11->ResumeLayout(false);
 			this->panel11->PerformLayout();
+			this->panel16->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
+
+
+
+
+
+
+		private: System::Void PharmacyDB()
+		{
+			sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+			sqlConn->Open();
+
+			sqlCmd->Connection = sqlConn;
+
+			sqlCmd->CommandText = "SELECT * FROM supplier ";
+
+			sqlRd = sqlCmd->ExecuteReader();
+
+			sqlDt->Load(sqlRd);
+
+			sqlRd->Close();
+
+			sqlConn->Close();
+
+			dataGridView1->DataSource = sqlDt;
+		}
+
+
+
+
+
+
+		private: System::Void RefreshDB()
+		{
+
+			try
+			{
+
+				sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+				sqlCmd->Connection = sqlConn;
+
+
+				MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter("SELECT * FROM supplier ", sqlConn);
+				DataTable^ sqlDt = gcnew DataTable();
+
+				sqlDtA->Fill(sqlDt);
+				dataGridView1->DataSource = sqlDt;
+
+
+
+
+			}
+
+
+			catch (Exception^ ex) {
+				MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+
+
+		}
+
+
+
+
+
+
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
-		this->Hide();
+		System::Windows::Forms::DialogResult Ifexit;
+
+		try {
+			Ifexit = MessageBox::Show("Are you sure you want to exit?", "", MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+
+			if (Ifexit == System::Windows::Forms::DialogResult::Yes) {
+				this->Close();
+			};
+		}
+
+		catch (Exception^ ex) {
+			MessageBox::Show( ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
+
+		
 	}
+private: System::Void Suppliers_Load(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+
+	try {
+
+		RefTextBox->Text = "";
+		NameTextBox->Text = "";
+		ProducTextBox->Text = "";
+		AmountTextBox->Text = "";
+		BPTextBox->Text = "";
+		ContactTextBox->Text = "";
+		BankACTextBox1->Text = "";
+		MobileACTextBox->Text = "";
+		SearchTextBox->Text = "";
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+}
+private: System::Void dataGridView1_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
+
+
+	try {
+
+		RefTextBox->Text = dataGridView1->SelectedRows[0]->Cells[0]->Value->ToString();
+		NameTextBox->Text = dataGridView1->SelectedRows[0]->Cells[1]->Value->ToString();
+		ProducTextBox->Text = dataGridView1->SelectedRows[0]->Cells[2]->Value->ToString();
+		AmountTextBox->Text = dataGridView1->SelectedRows[0]->Cells[3]->Value->ToString();
+		BPTextBox->Text = dataGridView1->SelectedRows[0]->Cells[4]->Value->ToString();
+		ContactTextBox->Text = dataGridView1->SelectedRows[0]->Cells[5]->Value->ToString();
+		BankACTextBox1->Text = dataGridView1->SelectedRows[0]->Cells[6]->Value->ToString();
+		MobileACTextBox->Text = dataGridView1->SelectedRows[0]->Cells[7]->Value->ToString();
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+
+
+}
+private: System::Void button6_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	RefreshDB();
+}
+private: System::Void SearchTextBox_TextChanged(System::Object^ sender, System::EventArgs^ e) {
+
+}
+private: System::Void SearchTextBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+
+
+	try
+
+	{
+
+
+		if (e->KeyChar == (Char)13) {
+
+			DataView^ dv = sqlDt->DefaultView;
+
+			dv->RowFilter = String::Format("company_name like '%{0}%' ", SearchTextBox->Text);
+			dataGridView1->DataSource = dv->ToTable();
+
+		}
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+}
+private: System::Void SearchButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	try
+
+	{
+		DataView^ dv = sqlDt->DefaultView;
+
+		dv->RowFilter = String::Format("company_name like '%{0}%' ", SearchTextBox->Text);
+		dataGridView1->DataSource = dv->ToTable();
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+}
+private: System::Void SaveButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+
+	sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+	sqlConn->Open();
+
+	sqlCmd->Connection = sqlConn;
+
+
+
+	try
+	{
+
+
+		sqlCmd->CommandText = "	insert into supplier (RefNo, company_name, product, amount, buying_price, contact_info, bank_details, mobile_details) "  "values ('" + RefTextBox->Text + "' , '" + NameTextBox->Text + "' , '" + ProducTextBox->Text + "' , '" + AmountTextBox->Text + "' , '" + BPTextBox->Text + "' , '" + ContactTextBox->Text + "' , '" + BankACTextBox1->Text + "', '" + MobileACTextBox->Text + "')";
+
+
+
+
+		sqlCmd->ExecuteNonQuery();
+
+		sqlConn->Close();
+
+		PharmacyDB();
+
+		RefreshDB();
+
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+
+}
+private: System::Void UpdateButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+
+
+	try
+	{
+
+		sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+		sqlCmd->Connection = sqlConn;
+
+
+		String^ RefNo = RefTextBox->Text;
+		String^ company_name = NameTextBox->Text;
+		String^ product = ProducTextBox->Text;
+		String^ amount = AmountTextBox->Text;
+		String^ buying_price = BPTextBox->Text;
+		String^ contact_info = ContactTextBox->Text;
+		String^ bank_details = BankACTextBox1->Text;
+		String^ mobile_details = MobileACTextBox->Text;
+
+
+		sqlCmd->CommandText = "	update supplier set RefNo = '" + RefNo + "', company_name = '" + company_name +
+			"', product = '" + product + "', amount = '" + amount + "', buying_price = '" + buying_price +
+			"', contact_info = '" + contact_info + "', bank_details = '" + bank_details + "', mobile_details = '" + mobile_details + "' WHERE RefNo = " + RefNo + "", sqlConn;
+
+
+		sqlConn->Open();
+
+		sqlCmd->ExecuteNonQuery();
+
+		sqlConn->Close();
+
+		PharmacyDB();
+
+		RefreshDB();
+
+
+
+
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+
+
+
+
+
+}
+private: System::Void DeleteButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+
+
+	try
+	{
+		sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+		sqlCmd->Connection = sqlConn;
+
+
+		String^ RefNo = RefTextBox->Text;
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand(" delete from supplier where RefNo = " + RefNo + "", sqlConn);
+
+		sqlConn->Open();
+
+		sqlRd = sqlCmd->ExecuteReader();
+
+		MessageBox::Show("Supplier Deleted", "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+
+		sqlConn->Close();
+
+
+
+
+
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+	RefreshDB();
+
+	sqlConn->Close();
+
+
+
+
+
+
+
+}
 };
 }

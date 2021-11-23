@@ -1,0 +1,28 @@
+﻿  Landingpage.cpp
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(6,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  Login.cpp
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(6,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+  MyForm.cpp
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\MyForm.h(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(6,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(7,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(8,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(9,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(10,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\Landingpage.h(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\MyForm.cpp(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\Pharmacy\MyForm.cpp(9,33): warning C4829: Possibly incorrect parameters to function main. Consider 'int main(Platform::Array<Platform::String^>^ argv)'
+  Suppliers.cpp
+  Generating Code...
+  Calculator.obj : MSIL module encountered; incremental linking is disabled for MSIL; performing full link
+  Pharmacy.vcxproj -> C:\Users\johns\Desktop\C++ GUI Vb.Net\Pharmacy\x64\Debug\Pharmacy.exe

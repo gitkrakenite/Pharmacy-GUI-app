@@ -11,18 +11,40 @@ namespace Pharmacy {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+
+
+	//Database library
+	using namespace MySql::Data::MySqlClient;
+
+
 	/// <summary>
 	/// Summary for Patients
 	/// </summary>
 	public ref class Patients : public System::Windows::Forms::Form
 	{
+
+		//Creating connectors
+
+		MySqlConnection^ sqlConn = gcnew MySqlConnection();
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand();
+
+		DataTable^ sqlDt = gcnew DataTable();
+
+		MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter();
+	private: System::Windows::Forms::Button^ button2;
+
+		MySqlDataReader^ sqlRd;
+
 	public:
 		Patients(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			
+
+			//Calling
+			PharmacyDB();
 		}
 
 	protected:
@@ -39,26 +61,35 @@ namespace Pharmacy {
 	private: System::Windows::Forms::Label^ label11;
 	protected:
 	private: System::Windows::Forms::Panel^ panel2;
-	private: System::Windows::Forms::Button^ button5;
-	private: System::Windows::Forms::Button^ button4;
-	private: System::Windows::Forms::Button^ button3;
-	private: System::Windows::Forms::Button^ button2;
+	private: System::Windows::Forms::Button^ DeleteButton;
+
+	private: System::Windows::Forms::Button^ UpdateButton;
+
+	private: System::Windows::Forms::Button^ ResetButton;
+
+	private: System::Windows::Forms::Button^ SaveButton;
+
 	private: System::Windows::Forms::Panel^ panel1;
 	private: System::Windows::Forms::Panel^ panel6;
+	private: System::Windows::Forms::TextBox^ NHIFTextBox;
 
-	private: System::Windows::Forms::TextBox^ textBox4;
+
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::Label^ label5;
-	private: System::Windows::Forms::TextBox^ textBox3;
+	private: System::Windows::Forms::TextBox^ MedicationtextBox;
+
+
 	private: System::Windows::Forms::Panel^ panel7;
 	private: System::Windows::Forms::Label^ label4;
 
 	private: System::Windows::Forms::Panel^ panel10;
 	private: System::Windows::Forms::Label^ label6;
 	private: System::Windows::Forms::Panel^ panel4;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ PatientSurTextBox;
+
 	private: System::Windows::Forms::Panel^ panel5;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ RefTextBox;
+
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label1;
@@ -69,17 +100,27 @@ namespace Pharmacy {
 	private: System::Windows::Forms::Label^ label9;
 	private: System::Windows::Forms::TextBox^ textBox8;
 	private: System::Windows::Forms::Label^ label10;
-	private: System::Windows::Forms::Panel^ panel11;
-	private: System::Windows::Forms::Panel^ panel12;
-	private: System::Windows::Forms::Label^ label8;
-	private: System::Windows::Forms::TextBox^ textBox9;
-	private: System::Windows::Forms::TextBox^ textBox10;
-	private: System::Windows::Forms::Label^ label13;
+
+
+
+
+
+
 	private: System::Windows::Forms::Panel^ panel16;
-	private: System::Windows::Forms::ComboBox^ comboBox3;
-	private: System::Windows::Forms::TextBox^ textBox5;
+	private: System::Windows::Forms::ComboBox^ GendercomboBox;
+
+	private: System::Windows::Forms::TextBox^ SearchTextBox;
+
 	private: System::Windows::Forms::Button^ button1;
-	private: System::Windows::Forms::TextBox^ textBox6;
+	private: System::Windows::Forms::TextBox^ AilmenttextBox;
+
+	private: System::Windows::Forms::Button^ SearchButton;
+
+	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::TextBox^ PCTextBox;
+
+	private: System::Windows::Forms::Panel^ panel8;
+	private: System::Windows::Forms::Label^ label7;
 
 	private:
 		/// <summary>
@@ -96,49 +137,50 @@ namespace Pharmacy {
 		{
 			this->label11 = (gcnew System::Windows::Forms::Label());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
-			this->button5 = (gcnew System::Windows::Forms::Button());
-			this->button4 = (gcnew System::Windows::Forms::Button());
-			this->button3 = (gcnew System::Windows::Forms::Button());
-			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->DeleteButton = (gcnew System::Windows::Forms::Button());
+			this->UpdateButton = (gcnew System::Windows::Forms::Button());
+			this->ResetButton = (gcnew System::Windows::Forms::Button());
+			this->SaveButton = (gcnew System::Windows::Forms::Button());
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->textBox6 = (gcnew System::Windows::Forms::TextBox());
-			this->comboBox3 = (gcnew System::Windows::Forms::ComboBox());
+			this->PCTextBox = (gcnew System::Windows::Forms::TextBox());
+			this->panel8 = (gcnew System::Windows::Forms::Panel());
+			this->label7 = (gcnew System::Windows::Forms::Label());
+			this->AilmenttextBox = (gcnew System::Windows::Forms::TextBox());
+			this->GendercomboBox = (gcnew System::Windows::Forms::ComboBox());
 			this->panel6 = (gcnew System::Windows::Forms::Panel());
-			this->textBox4 = (gcnew System::Windows::Forms::TextBox());
+			this->NHIFTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->label5 = (gcnew System::Windows::Forms::Label());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->MedicationtextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel7 = (gcnew System::Windows::Forms::Panel());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->panel10 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->PatientSurTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->RefTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->panel9 = (gcnew System::Windows::Forms::Panel());
-			this->textBox5 = (gcnew System::Windows::Forms::TextBox());
+			this->SearchButton = (gcnew System::Windows::Forms::Button());
+			this->SearchTextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel13 = (gcnew System::Windows::Forms::Panel());
 			this->panel14 = (gcnew System::Windows::Forms::Panel());
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->textBox8 = (gcnew System::Windows::Forms::TextBox());
 			this->label10 = (gcnew System::Windows::Forms::Label());
-			this->panel11 = (gcnew System::Windows::Forms::Panel());
-			this->panel12 = (gcnew System::Windows::Forms::Panel());
-			this->label8 = (gcnew System::Windows::Forms::Label());
-			this->textBox9 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox10 = (gcnew System::Windows::Forms::TextBox());
-			this->label13 = (gcnew System::Windows::Forms::Label());
 			this->panel16 = (gcnew System::Windows::Forms::Panel());
+			this->button2 = (gcnew System::Windows::Forms::Button());
+			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel2->SuspendLayout();
 			this->panel1->SuspendLayout();
 			this->panel9->SuspendLayout();
 			this->panel13->SuspendLayout();
-			this->panel11->SuspendLayout();
+			this->panel16->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// label11
@@ -156,118 +198,155 @@ namespace Pharmacy {
 			// panel2
 			// 
 			this->panel2->BackColor = System::Drawing::Color::White;
-			this->panel2->Controls->Add(this->button5);
-			this->panel2->Controls->Add(this->button4);
-			this->panel2->Controls->Add(this->button3);
-			this->panel2->Controls->Add(this->button2);
-			this->panel2->Location = System::Drawing::Point(53, 558);
+			this->panel2->Controls->Add(this->DeleteButton);
+			this->panel2->Controls->Add(this->UpdateButton);
+			this->panel2->Controls->Add(this->ResetButton);
+			this->panel2->Controls->Add(this->SaveButton);
+			this->panel2->Location = System::Drawing::Point(53, 623);
 			this->panel2->Name = L"panel2";
 			this->panel2->Size = System::Drawing::Size(679, 184);
 			this->panel2->TabIndex = 13;
 			// 
-			// button5
+			// DeleteButton
 			// 
-			this->button5->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->DeleteButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button5->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->DeleteButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button5->ForeColor = System::Drawing::Color::White;
-			this->button5->Location = System::Drawing::Point(419, 99);
-			this->button5->Name = L"button5";
-			this->button5->Size = System::Drawing::Size(232, 65);
-			this->button5->TabIndex = 7;
-			this->button5->Text = L"Delete";
-			this->button5->UseVisualStyleBackColor = false;
+			this->DeleteButton->ForeColor = System::Drawing::Color::White;
+			this->DeleteButton->Location = System::Drawing::Point(419, 99);
+			this->DeleteButton->Name = L"DeleteButton";
+			this->DeleteButton->Size = System::Drawing::Size(232, 65);
+			this->DeleteButton->TabIndex = 7;
+			this->DeleteButton->Text = L"Delete";
+			this->DeleteButton->UseVisualStyleBackColor = false;
+			this->DeleteButton->Click += gcnew System::EventHandler(this, &Patients::DeleteButton_Click);
 			// 
-			// button4
+			// UpdateButton
 			// 
-			this->button4->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->UpdateButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->UpdateButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button4->ForeColor = System::Drawing::Color::White;
-			this->button4->Location = System::Drawing::Point(35, 103);
-			this->button4->Name = L"button4";
-			this->button4->Size = System::Drawing::Size(232, 65);
-			this->button4->TabIndex = 6;
-			this->button4->Text = L"Update";
-			this->button4->UseVisualStyleBackColor = false;
+			this->UpdateButton->ForeColor = System::Drawing::Color::White;
+			this->UpdateButton->Location = System::Drawing::Point(35, 103);
+			this->UpdateButton->Name = L"UpdateButton";
+			this->UpdateButton->Size = System::Drawing::Size(232, 65);
+			this->UpdateButton->TabIndex = 6;
+			this->UpdateButton->Text = L"Update";
+			this->UpdateButton->UseVisualStyleBackColor = false;
+			this->UpdateButton->Click += gcnew System::EventHandler(this, &Patients::UpdateButton_Click);
 			// 
-			// button3
+			// ResetButton
 			// 
-			this->button3->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->ResetButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->ResetButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button3->ForeColor = System::Drawing::Color::White;
-			this->button3->Location = System::Drawing::Point(419, 15);
-			this->button3->Name = L"button3";
-			this->button3->Size = System::Drawing::Size(232, 65);
-			this->button3->TabIndex = 5;
-			this->button3->Text = L"Reset";
-			this->button3->UseVisualStyleBackColor = false;
+			this->ResetButton->ForeColor = System::Drawing::Color::White;
+			this->ResetButton->Location = System::Drawing::Point(419, 15);
+			this->ResetButton->Name = L"ResetButton";
+			this->ResetButton->Size = System::Drawing::Size(232, 65);
+			this->ResetButton->TabIndex = 5;
+			this->ResetButton->Text = L"Reset";
+			this->ResetButton->UseVisualStyleBackColor = false;
+			this->ResetButton->Click += gcnew System::EventHandler(this, &Patients::ResetButton_Click);
 			// 
-			// button2
+			// SaveButton
 			// 
-			this->button2->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+			this->SaveButton->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->SaveButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button2->ForeColor = System::Drawing::Color::White;
-			this->button2->Location = System::Drawing::Point(35, 15);
-			this->button2->Name = L"button2";
-			this->button2->Size = System::Drawing::Size(232, 65);
-			this->button2->TabIndex = 4;
-			this->button2->Text = L"Save";
-			this->button2->UseVisualStyleBackColor = false;
+			this->SaveButton->ForeColor = System::Drawing::Color::White;
+			this->SaveButton->Location = System::Drawing::Point(35, 15);
+			this->SaveButton->Name = L"SaveButton";
+			this->SaveButton->Size = System::Drawing::Size(232, 65);
+			this->SaveButton->TabIndex = 4;
+			this->SaveButton->Text = L"Save";
+			this->SaveButton->UseVisualStyleBackColor = false;
+			this->SaveButton->Click += gcnew System::EventHandler(this, &Patients::SaveButton_Click);
 			// 
 			// panel1
 			// 
 			this->panel1->BackColor = System::Drawing::Color::White;
-			this->panel1->Controls->Add(this->textBox6);
-			this->panel1->Controls->Add(this->comboBox3);
+			this->panel1->Controls->Add(this->PCTextBox);
+			this->panel1->Controls->Add(this->panel8);
+			this->panel1->Controls->Add(this->label7);
+			this->panel1->Controls->Add(this->AilmenttextBox);
+			this->panel1->Controls->Add(this->GendercomboBox);
 			this->panel1->Controls->Add(this->panel6);
-			this->panel1->Controls->Add(this->textBox4);
+			this->panel1->Controls->Add(this->NHIFTextBox);
 			this->panel1->Controls->Add(this->panel3);
 			this->panel1->Controls->Add(this->label5);
-			this->panel1->Controls->Add(this->textBox3);
+			this->panel1->Controls->Add(this->MedicationtextBox);
 			this->panel1->Controls->Add(this->panel7);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->panel10);
 			this->panel1->Controls->Add(this->label6);
 			this->panel1->Controls->Add(this->panel4);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->PatientSurTextBox);
 			this->panel1->Controls->Add(this->panel5);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->RefTextBox);
 			this->panel1->Controls->Add(this->label3);
 			this->panel1->Controls->Add(this->label2);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Location = System::Drawing::Point(53, 88);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(679, 464);
+			this->panel1->Size = System::Drawing::Size(679, 529);
 			this->panel1->TabIndex = 12;
 			// 
-			// textBox6
+			// PCTextBox
 			// 
-			this->textBox6->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->PCTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->PCTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox6->Location = System::Drawing::Point(309, 269);
-			this->textBox6->Name = L"textBox6";
-			this->textBox6->Size = System::Drawing::Size(340, 27);
-			this->textBox6->TabIndex = 33;
-			this->textBox6->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->PCTextBox->Location = System::Drawing::Point(309, 462);
+			this->PCTextBox->Name = L"PCTextBox";
+			this->PCTextBox->Size = System::Drawing::Size(342, 27);
+			this->PCTextBox->TabIndex = 36;
+			this->PCTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
-			// comboBox3
+			// panel8
 			// 
-			this->comboBox3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->panel8->BackColor = System::Drawing::Color::DarkSlateGray;
+			this->panel8->Location = System::Drawing::Point(309, 489);
+			this->panel8->Name = L"panel8";
+			this->panel8->Size = System::Drawing::Size(342, 4);
+			this->panel8->TabIndex = 35;
+			// 
+			// label7
+			// 
+			this->label7->AutoSize = true;
+			this->label7->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->comboBox3->FormattingEnabled = true;
-			this->comboBox3->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Male", L"Female", L"Rather Not Say" });
-			this->comboBox3->Location = System::Drawing::Point(309, 180);
-			this->comboBox3->Name = L"comboBox3";
-			this->comboBox3->Size = System::Drawing::Size(342, 35);
-			this->comboBox3->TabIndex = 32;
+			this->label7->Location = System::Drawing::Point(21, 462);
+			this->label7->Name = L"label7";
+			this->label7->Size = System::Drawing::Size(202, 31);
+			this->label7->TabIndex = 34;
+			this->label7->Text = L"Patient Contact";
+			// 
+			// AilmenttextBox
+			// 
+			this->AilmenttextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->AilmenttextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->AilmenttextBox->Location = System::Drawing::Point(309, 259);
+			this->AilmenttextBox->Name = L"AilmenttextBox";
+			this->AilmenttextBox->Size = System::Drawing::Size(340, 27);
+			this->AilmenttextBox->TabIndex = 33;
+			this->AilmenttextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			// 
+			// GendercomboBox
+			// 
+			this->GendercomboBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->GendercomboBox->FormattingEnabled = true;
+			this->GendercomboBox->Items->AddRange(gcnew cli::array< System::Object^  >(3) { L"Male", L"Female", L"Rather Not Say" });
+			this->GendercomboBox->Location = System::Drawing::Point(309, 180);
+			this->GendercomboBox->Name = L"GendercomboBox";
+			this->GendercomboBox->Size = System::Drawing::Size(342, 35);
+			this->GendercomboBox->TabIndex = 32;
 			// 
 			// panel6
 			// 
@@ -277,21 +356,21 @@ namespace Pharmacy {
 			this->panel6->Size = System::Drawing::Size(342, 4);
 			this->panel6->TabIndex = 31;
 			// 
-			// textBox4
+			// NHIFTextBox
 			// 
-			this->textBox4->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->NHIFTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->NHIFTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox4->Location = System::Drawing::Point(309, 407);
-			this->textBox4->Name = L"textBox4";
-			this->textBox4->Size = System::Drawing::Size(342, 27);
-			this->textBox4->TabIndex = 29;
-			this->textBox4->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->NHIFTextBox->Location = System::Drawing::Point(309, 397);
+			this->NHIFTextBox->Name = L"NHIFTextBox";
+			this->NHIFTextBox->Size = System::Drawing::Size(342, 27);
+			this->NHIFTextBox->TabIndex = 29;
+			this->NHIFTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel3
 			// 
 			this->panel3->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel3->Location = System::Drawing::Point(309, 434);
+			this->panel3->Location = System::Drawing::Point(309, 424);
 			this->panel3->Name = L"panel3";
 			this->panel3->Size = System::Drawing::Size(342, 4);
 			this->panel3->TabIndex = 28;
@@ -307,21 +386,21 @@ namespace Pharmacy {
 			this->label5->TabIndex = 27;
 			this->label5->Text = L"Gender";
 			// 
-			// textBox3
+			// MedicationtextBox
 			// 
-			this->textBox3->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->MedicationtextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->MedicationtextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox3->Location = System::Drawing::Point(310, 341);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(342, 27);
-			this->textBox3->TabIndex = 26;
-			this->textBox3->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->MedicationtextBox->Location = System::Drawing::Point(310, 331);
+			this->MedicationtextBox->Name = L"MedicationtextBox";
+			this->MedicationtextBox->Size = System::Drawing::Size(342, 27);
+			this->MedicationtextBox->TabIndex = 26;
+			this->MedicationtextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel7
 			// 
 			this->panel7->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel7->Location = System::Drawing::Point(310, 368);
+			this->panel7->Location = System::Drawing::Point(310, 358);
 			this->panel7->Name = L"panel7";
 			this->panel7->Size = System::Drawing::Size(342, 4);
 			this->panel7->TabIndex = 25;
@@ -331,16 +410,16 @@ namespace Pharmacy {
 			this->label4->AutoSize = true;
 			this->label4->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label4->Location = System::Drawing::Point(21, 341);
+			this->label4->Location = System::Drawing::Point(21, 331);
 			this->label4->Name = L"label4";
-			this->label4->Size = System::Drawing::Size(283, 31);
+			this->label4->Size = System::Drawing::Size(151, 31);
 			this->label4->TabIndex = 24;
-			this->label4->Text = L"Medication Frequency";
+			this->label4->Text = L"Medication";
 			// 
 			// panel10
 			// 
 			this->panel10->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel10->Location = System::Drawing::Point(309, 296);
+			this->panel10->Location = System::Drawing::Point(309, 286);
 			this->panel10->Name = L"panel10";
 			this->panel10->Size = System::Drawing::Size(342, 4);
 			this->panel10->TabIndex = 21;
@@ -350,7 +429,7 @@ namespace Pharmacy {
 			this->label6->AutoSize = true;
 			this->label6->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label6->Location = System::Drawing::Point(21, 269);
+			this->label6->Location = System::Drawing::Point(21, 259);
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(110, 31);
 			this->label6->TabIndex = 19;
@@ -364,16 +443,16 @@ namespace Pharmacy {
 			this->panel4->Size = System::Drawing::Size(342, 4);
 			this->panel4->TabIndex = 12;
 			// 
-			// textBox2
+			// PatientSurTextBox
 			// 
-			this->textBox2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->PatientSurTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->PatientSurTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox2->Location = System::Drawing::Point(309, 110);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(342, 27);
-			this->textBox2->TabIndex = 11;
-			this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->PatientSurTextBox->Location = System::Drawing::Point(309, 110);
+			this->PatientSurTextBox->Name = L"PatientSurTextBox";
+			this->PatientSurTextBox->Size = System::Drawing::Size(342, 27);
+			this->PatientSurTextBox->TabIndex = 11;
+			this->PatientSurTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// panel5
 			// 
@@ -383,23 +462,23 @@ namespace Pharmacy {
 			this->panel5->Size = System::Drawing::Size(342, 4);
 			this->panel5->TabIndex = 10;
 			// 
-			// textBox1
+			// RefTextBox
 			// 
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->RefTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->RefTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(309, 29);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(342, 27);
-			this->textBox1->TabIndex = 9;
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->RefTextBox->Location = System::Drawing::Point(309, 29);
+			this->RefTextBox->Name = L"RefTextBox";
+			this->RefTextBox->Size = System::Drawing::Size(342, 27);
+			this->RefTextBox->TabIndex = 9;
+			this->RefTextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label3
 			// 
 			this->label3->AutoSize = true;
 			this->label3->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->label3->Location = System::Drawing::Point(21, 407);
+			this->label3->Location = System::Drawing::Point(21, 397);
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(182, 31);
 			this->label3->TabIndex = 2;
@@ -431,26 +510,40 @@ namespace Pharmacy {
 			// 
 			this->panel9->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(224)), static_cast<System::Int32>(static_cast<System::Byte>(224)),
 				static_cast<System::Int32>(static_cast<System::Byte>(224)));
-			this->panel9->Controls->Add(this->textBox5);
+			this->panel9->Controls->Add(this->SearchButton);
+			this->panel9->Controls->Add(this->SearchTextBox);
 			this->panel9->Controls->Add(this->panel13);
 			this->panel9->Controls->Add(this->label10);
-			this->panel9->Controls->Add(this->panel11);
-			this->panel9->Controls->Add(this->textBox10);
-			this->panel9->Controls->Add(this->label13);
 			this->panel9->Location = System::Drawing::Point(738, 88);
 			this->panel9->Name = L"panel9";
 			this->panel9->Size = System::Drawing::Size(1184, 72);
 			this->panel9->TabIndex = 16;
 			// 
-			// textBox5
+			// SearchButton
 			// 
-			this->textBox5->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox5->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->SearchButton->BackColor = System::Drawing::Color::White;
+			this->SearchButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox5->Location = System::Drawing::Point(807, 29);
-			this->textBox5->Name = L"textBox5";
-			this->textBox5->Size = System::Drawing::Size(261, 27);
-			this->textBox5->TabIndex = 17;
+			this->SearchButton->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->SearchButton->Location = System::Drawing::Point(959, 9);
+			this->SearchButton->Name = L"SearchButton";
+			this->SearchButton->Size = System::Drawing::Size(206, 54);
+			this->SearchButton->TabIndex = 18;
+			this->SearchButton->Text = L"Search";
+			this->SearchButton->UseVisualStyleBackColor = false;
+			this->SearchButton->Click += gcnew System::EventHandler(this, &Patients::SearchButton_Click);
+			// 
+			// SearchTextBox
+			// 
+			this->SearchTextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->SearchTextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->SearchTextBox->Location = System::Drawing::Point(331, 23);
+			this->SearchTextBox->Name = L"SearchTextBox";
+			this->SearchTextBox->Size = System::Drawing::Size(570, 27);
+			this->SearchTextBox->TabIndex = 17;
+			this->SearchTextBox->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Patients::SearchTextBox_KeyPress);
 			// 
 			// panel13
 			// 
@@ -458,9 +551,9 @@ namespace Pharmacy {
 			this->panel13->Controls->Add(this->panel14);
 			this->panel13->Controls->Add(this->label9);
 			this->panel13->Controls->Add(this->textBox8);
-			this->panel13->Location = System::Drawing::Point(807, 59);
+			this->panel13->Location = System::Drawing::Point(331, 53);
 			this->panel13->Name = L"panel13";
-			this->panel13->Size = System::Drawing::Size(261, 4);
+			this->panel13->Size = System::Drawing::Size(570, 4);
 			this->panel13->TabIndex = 16;
 			// 
 			// panel14
@@ -501,84 +594,47 @@ namespace Pharmacy {
 				static_cast<System::Byte>(0)));
 			this->label10->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label10->Location = System::Drawing::Point(589, 33);
+			this->label10->Location = System::Drawing::Point(43, 32);
 			this->label10->Name = L"label10";
-			this->label10->Size = System::Drawing::Size(139, 27);
+			this->label10->Size = System::Drawing::Size(212, 27);
 			this->label10->TabIndex = 14;
-			this->label10->Text = L"By NHIF NO:";
-			// 
-			// panel11
-			// 
-			this->panel11->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel11->Controls->Add(this->panel12);
-			this->panel11->Controls->Add(this->label8);
-			this->panel11->Controls->Add(this->textBox9);
-			this->panel11->Location = System::Drawing::Point(278, 58);
-			this->panel11->Name = L"panel11";
-			this->panel11->Size = System::Drawing::Size(158, 4);
-			this->panel11->TabIndex = 13;
-			// 
-			// panel12
-			// 
-			this->panel12->BackColor = System::Drawing::Color::DarkSlateGray;
-			this->panel12->Location = System::Drawing::Point(429, 0);
-			this->panel12->Name = L"panel12";
-			this->panel12->Size = System::Drawing::Size(326, 4);
-			this->panel12->TabIndex = 16;
-			// 
-			// label8
-			// 
-			this->label8->AutoSize = true;
-			this->label8->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label8->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label8->Location = System::Drawing::Point(207, -23);
-			this->label8->Name = L"label8";
-			this->label8->Size = System::Drawing::Size(177, 27);
-			this->label8->TabIndex = 14;
-			this->label8->Text = L"Search By Name";
-			// 
-			// textBox9
-			// 
-			this->textBox9->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox9->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->textBox9->Location = System::Drawing::Point(429, -33);
-			this->textBox9->Name = L"textBox9";
-			this->textBox9->Size = System::Drawing::Size(326, 27);
-			this->textBox9->TabIndex = 15;
-			// 
-			// textBox10
-			// 
-			this->textBox10->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox10->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->textBox10->Location = System::Drawing::Point(278, 25);
-			this->textBox10->Name = L"textBox10";
-			this->textBox10->Size = System::Drawing::Size(158, 27);
-			this->textBox10->TabIndex = 1;
-			// 
-			// label13
-			// 
-			this->label13->AutoSize = true;
-			this->label13->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei UI", 12, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
-				static_cast<System::Byte>(0)));
-			this->label13->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
-				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->label13->Location = System::Drawing::Point(15, 28);
-			this->label13->Name = L"label13";
-			this->label13->Size = System::Drawing::Size(223, 27);
-			this->label13->TabIndex = 0;
-			this->label13->Text = L"Search By Patient ID:";
+			this->label10->Text = L"Search By Surname:";
 			// 
 			// panel16
 			// 
 			this->panel16->BackColor = System::Drawing::Color::White;
+			this->panel16->Controls->Add(this->button2);
+			this->panel16->Controls->Add(this->dataGridView1);
 			this->panel16->Location = System::Drawing::Point(738, 161);
 			this->panel16->Name = L"panel16";
-			this->panel16->Size = System::Drawing::Size(1184, 536);
+			this->panel16->Size = System::Drawing::Size(1184, 619);
 			this->panel16->TabIndex = 15;
+			// 
+			// button2
+			// 
+			this->button2->BackColor = System::Drawing::Color::White;
+			this->button2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.2F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(0)));
+			this->button2->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
+				static_cast<System::Int32>(static_cast<System::Byte>(64)));
+			this->button2->Location = System::Drawing::Point(760, 559);
+			this->button2->Name = L"button2";
+			this->button2->Size = System::Drawing::Size(399, 39);
+			this->button2->TabIndex = 18;
+			this->button2->Text = L"Not seeing something \? ";
+			this->button2->UseVisualStyleBackColor = false;
+			this->button2->Click += gcnew System::EventHandler(this, &Patients::button2_Click);
+			// 
+			// dataGridView1
+			// 
+			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->dataGridView1->Location = System::Drawing::Point(20, 20);
+			this->dataGridView1->Name = L"dataGridView1";
+			this->dataGridView1->RowHeadersWidth = 51;
+			this->dataGridView1->RowTemplate->Height = 24;
+			this->dataGridView1->Size = System::Drawing::Size(1145, 522);
+			this->dataGridView1->TabIndex = 0;
+			this->dataGridView1->CellClick += gcnew System::Windows::Forms::DataGridViewCellEventHandler(this, &Patients::dataGridView1_CellClick);
 			// 
 			// button1
 			// 
@@ -587,7 +643,7 @@ namespace Pharmacy {
 				static_cast<System::Byte>(0)));
 			this->button1->ForeColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(0)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(64)));
-			this->button1->Location = System::Drawing::Point(1566, 703);
+			this->button1->Location = System::Drawing::Point(1588, 786);
 			this->button1->Name = L"button1";
 			this->button1->Size = System::Drawing::Size(285, 54);
 			this->button1->TabIndex = 17;
@@ -600,7 +656,7 @@ namespace Pharmacy {
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->BackColor = System::Drawing::Color::Teal;
-			this->ClientSize = System::Drawing::Size(1942, 763);
+			this->ClientSize = System::Drawing::Size(1942, 852);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->panel9);
 			this->Controls->Add(this->panel16);
@@ -609,6 +665,7 @@ namespace Pharmacy {
 			this->Controls->Add(this->panel1);
 			this->Name = L"Patients";
 			this->Text = L"Patients";
+			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->Load += gcnew System::EventHandler(this, &Patients::Patients_Load);
 			this->panel2->ResumeLayout(false);
 			this->panel1->ResumeLayout(false);
@@ -617,21 +674,315 @@ namespace Pharmacy {
 			this->panel9->PerformLayout();
 			this->panel13->ResumeLayout(false);
 			this->panel13->PerformLayout();
-			this->panel11->ResumeLayout(false);
-			this->panel11->PerformLayout();
+			this->panel16->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
+
+
+
+
+
+		private: System::Void PharmacyDB()
+		{
+			sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+			sqlConn->Open();
+
+			sqlCmd->Connection = sqlConn;
+
+			sqlCmd->CommandText = "SELECT * FROM patients ";
+
+			sqlRd = sqlCmd->ExecuteReader();
+
+			sqlDt->Load(sqlRd);
+
+			sqlRd->Close();
+
+			sqlConn->Close();
+
+			dataGridView1->DataSource = sqlDt;
+		}
+
+
+
+
+		private: System::Void RefreshDB()
+		{
+
+			try
+			{
+
+				sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+				sqlCmd->Connection = sqlConn;
+
+
+				MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter("SELECT * FROM patients ", sqlConn);
+				DataTable^ sqlDt = gcnew DataTable();
+
+				sqlDtA->Fill(sqlDt);
+				dataGridView1->DataSource = sqlDt;
+
+
+
+
+			}
+
+
+			catch (Exception^ ex) {
+				MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			}
+
+
+		}
+
+
+
+
+
+
+
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
 
-		this->Close();
+		System::Windows::Forms::DialogResult Ifexit;
+
+		Ifexit = MessageBox::Show("Are you sure you want to exit?", "", MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+
+		if (Ifexit == System::Windows::Forms::DialogResult::Yes) {
+			this->Close();
+		};
 
 
 	}
 private: System::Void Patients_Load(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	RefreshDB();
+}
+private: System::Void ResetButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	try
+	{
+		RefTextBox->Text = "";
+		PatientSurTextBox->Text = "";
+		GendercomboBox->Text = "";
+		AilmenttextBox->Text = "";
+		MedicationtextBox->Text = "";
+		NHIFTextBox->Text = "";
+		PCTextBox->Text = "";
+		SearchTextBox->Text = "";
+	}
+
+	
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+}
+private: System::Void dataGridView1_CellClick(System::Object^ sender, System::Windows::Forms::DataGridViewCellEventArgs^ e) {
+
+
+
+	try {
+
+		RefTextBox->Text = dataGridView1->SelectedRows[0]->Cells[0]->Value->ToString();
+		PatientSurTextBox->Text = dataGridView1->SelectedRows[0]->Cells[1]->Value->ToString();
+		GendercomboBox->Text = dataGridView1->SelectedRows[0]->Cells[2]->Value->ToString();
+		AilmenttextBox->Text = dataGridView1->SelectedRows[0]->Cells[3]->Value->ToString();
+		MedicationtextBox->Text = dataGridView1->SelectedRows[0]->Cells[4]->Value->ToString();
+		NHIFTextBox->Text = dataGridView1->SelectedRows[0]->Cells[5]->Value->ToString();
+		PCTextBox->Text = dataGridView1->SelectedRows[0]->Cells[6]->Value->ToString();
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+}
+private: System::Void SearchTextBox_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+
+	try
+
+	{
+
+
+		if (e->KeyChar == (Char)13) {
+
+			DataView^ dv = sqlDt->DefaultView;
+
+			dv->RowFilter = String::Format("patient_surname like '%{0}%' ", SearchTextBox->Text);
+			dataGridView1->DataSource = dv->ToTable();
+
+		}
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+}
+private: System::Void SearchButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	try
+
+	{
+		DataView^ dv = sqlDt->DefaultView;
+
+		dv->RowFilter = String::Format("patient_surname like '%{0}%' ", SearchTextBox->Text);
+		dataGridView1->DataSource = dv->ToTable();
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+}
+private: System::Void SaveButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+	sqlConn->Open();
+
+	sqlCmd->Connection = sqlConn;
+
+
+	try
+	{
+
+
+		sqlCmd->CommandText = "	insert into patients (RefNo, patient_surname, gender, ailment, medication, nhif_no, patient_contact) "  "values ('" + RefTextBox->Text + "' , '" + PatientSurTextBox->Text + "' , '" + GendercomboBox->Text + "' , '" + AilmenttextBox->Text + "' , '" + MedicationtextBox->Text + "' , '" + NHIFTextBox->Text + "' , '" + PCTextBox->Text + "')";
+
+
+
+
+		sqlCmd->ExecuteNonQuery();
+
+		sqlConn->Close();
+
+		PharmacyDB();
+
+		RefreshDB();
+
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+
+
+}
+private: System::Void UpdateButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	try
+	{
+
+		sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+		sqlCmd->Connection = sqlConn;
+
+
+		String^ RefNo = RefTextBox->Text;
+		String^ patient_surname = PatientSurTextBox->Text;
+		String^ gender = GendercomboBox->Text;
+		String^ ailment = AilmenttextBox->Text;
+		String^ medication = MedicationtextBox->Text;
+		String^ nhif_no = NHIFTextBox->Text;
+		String^ patient_contact = PCTextBox->Text;
+
+
+		sqlCmd->CommandText = "	update patients set RefNo = '" + RefNo + "', patient_surname = '" + patient_surname +
+			"', gender = '" + gender + "', ailment = '" + ailment + "', medication = '" + medication +
+			"', nhif_no = '" + nhif_no + "', patient_contact = '" + patient_contact + "' WHERE RefNo = " + RefNo + "", sqlConn;
+
+
+		sqlConn->Open();
+
+		sqlCmd->ExecuteNonQuery();
+
+		sqlConn->Close();
+
+		PharmacyDB();
+
+		RefreshDB();
+
+		sqlConn->Close();
+
+
+
+
+
+
+	}
+
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+
+}
+private: System::Void DeleteButton_Click(System::Object^ sender, System::EventArgs^ e) {
+
+
+	try
+	{
+		sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+		sqlCmd->Connection = sqlConn;
+
+
+		String^ RefNo = RefTextBox->Text;
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand(" delete from patients where RefNo = " + RefNo + "", sqlConn);
+
+		sqlConn->Open();
+
+		sqlRd = sqlCmd->ExecuteReader();
+
+		MessageBox::Show("Patient Removed", "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+
+		sqlConn->Close();
+
+
+
+	}
+
+	catch (Exception^ ex) {
+		MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+	}
+
+
+	RefreshDB();
+
+	sqlConn->Close();
+
 }
 };
 }

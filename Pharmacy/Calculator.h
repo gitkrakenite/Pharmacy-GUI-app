@@ -284,6 +284,7 @@ namespace Pharmacy {
 			this->Controls->Add(this->label1);
 			this->Name = L"Calculator";
 			this->Text = L"Calculator";
+			this->Load += gcnew System::EventHandler(this, &Calculator::Calculator_Load);
 			this->panel2->ResumeLayout(false);
 			this->panel2->PerformLayout();
 			this->panel1->ResumeLayout(false);
@@ -342,7 +343,11 @@ private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e
 }
 private: System::Void button5_Click(System::Object^ sender, System::EventArgs^ e) {
 
-	this->Hide();
+	this->Close();
+
+	
+}
+private: System::Void Calculator_Load(System::Object^ sender, System::EventArgs^ e) {
 }
 };
 }

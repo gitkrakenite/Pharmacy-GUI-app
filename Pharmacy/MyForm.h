@@ -11,18 +11,41 @@ namespace Pharmacy {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
+	//Database library
+	using namespace MySql::Data::MySqlClient;
+
+
+
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
 	public ref class MyForm : public System::Windows::Forms::Form
 	{
+
+
+		//Creating connectors
+
+		MySqlConnection^ sqlConn = gcnew MySqlConnection();
+
+		MySqlCommand^ sqlCmd = gcnew MySqlCommand();
+
+		DataTable^ sqlDt = gcnew DataTable();
+
+		MySqlDataAdapter^ sqlDtA = gcnew MySqlDataAdapter();
+
+		MySqlDataReader^ sqlRd;
+
+
 	public:
 		MyForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			
+
+
+			//Calling
+			//PharmacyDB();
 		}
 
 	protected:
@@ -41,17 +64,21 @@ namespace Pharmacy {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::PictureBox^ pictureBox1;
 	private: System::Windows::Forms::Panel^ panel2;
-	private: System::Windows::Forms::Button^ button1;
+	private: System::Windows::Forms::Button^ SignUpButton;
+
 	private: System::Windows::Forms::Panel^ panel5;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::TextBox^ textBox3;
 	private: System::Windows::Forms::Panel^ panel4;
 	private: System::Windows::Forms::Label^ label2;
-	private: System::Windows::Forms::TextBox^ textBox2;
+	private: System::Windows::Forms::TextBox^ PwdtextBox;
+
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::Label^ label3;
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ UserNametextBox;
+
 	private: System::Windows::Forms::PictureBox^ pictureBox2;
+	private: System::Windows::Forms::Label^ label5;
 
 	private:
 		/// <summary>
@@ -68,16 +95,17 @@ namespace Pharmacy {
 		{
 			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(MyForm::typeid));
 			this->panel1 = (gcnew System::Windows::Forms::Panel());
-			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label5 = (gcnew System::Windows::Forms::Label());
+			this->SignUpButton = (gcnew System::Windows::Forms::Button());
 			this->panel5 = (gcnew System::Windows::Forms::Panel());
 			this->label4 = (gcnew System::Windows::Forms::Label());
 			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
 			this->panel4 = (gcnew System::Windows::Forms::Panel());
 			this->label2 = (gcnew System::Windows::Forms::Label());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
+			this->PwdtextBox = (gcnew System::Windows::Forms::TextBox());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->label3 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->UserNametextBox = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->pictureBox1 = (gcnew System::Windows::Forms::PictureBox());
 			this->panel2 = (gcnew System::Windows::Forms::Panel());
@@ -91,36 +119,47 @@ namespace Pharmacy {
 			// panel1
 			// 
 			this->panel1->BackColor = System::Drawing::Color::White;
-			this->panel1->Controls->Add(this->button1);
+			this->panel1->Controls->Add(this->label5);
+			this->panel1->Controls->Add(this->SignUpButton);
 			this->panel1->Controls->Add(this->panel5);
 			this->panel1->Controls->Add(this->label4);
 			this->panel1->Controls->Add(this->textBox3);
 			this->panel1->Controls->Add(this->panel4);
 			this->panel1->Controls->Add(this->label2);
-			this->panel1->Controls->Add(this->textBox2);
+			this->panel1->Controls->Add(this->PwdtextBox);
 			this->panel1->Controls->Add(this->panel3);
 			this->panel1->Controls->Add(this->label3);
-			this->panel1->Controls->Add(this->textBox1);
+			this->panel1->Controls->Add(this->UserNametextBox);
 			this->panel1->Controls->Add(this->label1);
 			this->panel1->Controls->Add(this->pictureBox1);
 			this->panel1->Location = System::Drawing::Point(32, 63);
 			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(725, 736);
+			this->panel1->Size = System::Drawing::Size(725, 739);
 			this->panel1->TabIndex = 0;
 			// 
-			// button1
+			// label5
 			// 
-			this->button1->BackColor = System::Drawing::Color::Teal;
-			this->button1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+			this->label5->AutoSize = true;
+			this->label5->Location = System::Drawing::Point(399, 632);
+			this->label5->Name = L"label5";
+			this->label5->Size = System::Drawing::Size(216, 17);
+			this->label5->TabIndex = 13;
+			this->label5->Text = L"Already have an account\? Log in";
+			this->label5->Click += gcnew System::EventHandler(this, &MyForm::label5_Click);
+			// 
+			// SignUpButton
+			// 
+			this->SignUpButton->BackColor = System::Drawing::Color::Teal;
+			this->SignUpButton->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 13.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->button1->ForeColor = System::Drawing::Color::White;
-			this->button1->Location = System::Drawing::Point(268, 609);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(272, 75);
-			this->button1->TabIndex = 12;
-			this->button1->Text = L"Sign Up";
-			this->button1->UseVisualStyleBackColor = false;
-			this->button1->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
+			this->SignUpButton->ForeColor = System::Drawing::Color::White;
+			this->SignUpButton->Location = System::Drawing::Point(48, 598);
+			this->SignUpButton->Name = L"SignUpButton";
+			this->SignUpButton->Size = System::Drawing::Size(272, 75);
+			this->SignUpButton->TabIndex = 12;
+			this->SignUpButton->Text = L"Sign Up";
+			this->SignUpButton->UseVisualStyleBackColor = false;
+			this->SignUpButton->Click += gcnew System::EventHandler(this, &MyForm::button1_Click);
 			// 
 			// panel5
 			// 
@@ -174,17 +213,17 @@ namespace Pharmacy {
 			this->label2->TabIndex = 7;
 			this->label2->Text = L"Create password";
 			// 
-			// textBox2
+			// PwdtextBox
 			// 
-			this->textBox2->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox2->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->PwdtextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->PwdtextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox2->Location = System::Drawing::Point(339, 419);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(342, 24);
-			this->textBox2->TabIndex = 6;
-			this->textBox2->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
-			this->textBox2->UseSystemPasswordChar = true;
+			this->PwdtextBox->Location = System::Drawing::Point(339, 419);
+			this->PwdtextBox->Name = L"PwdtextBox";
+			this->PwdtextBox->Size = System::Drawing::Size(342, 24);
+			this->PwdtextBox->TabIndex = 6;
+			this->PwdtextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->PwdtextBox->UseSystemPasswordChar = true;
 			// 
 			// panel3
 			// 
@@ -206,16 +245,16 @@ namespace Pharmacy {
 			this->label3->TabIndex = 4;
 			this->label3->Text = L"Create username";
 			// 
-			// textBox1
+			// UserNametextBox
 			// 
-			this->textBox1->BorderStyle = System::Windows::Forms::BorderStyle::None;
-			this->textBox1->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
+			this->UserNametextBox->BorderStyle = System::Windows::Forms::BorderStyle::None;
+			this->UserNametextBox->Font = (gcnew System::Drawing::Font(L"Microsoft YaHei", 10.8F, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(0)));
-			this->textBox1->Location = System::Drawing::Point(339, 339);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(342, 24);
-			this->textBox1->TabIndex = 3;
-			this->textBox1->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
+			this->UserNametextBox->Location = System::Drawing::Point(339, 339);
+			this->UserNametextBox->Name = L"UserNametextBox";
+			this->UserNametextBox->Size = System::Drawing::Size(342, 24);
+			this->UserNametextBox->TabIndex = 3;
+			this->UserNametextBox->TextAlign = System::Windows::Forms::HorizontalAlignment::Center;
 			// 
 			// label1
 			// 
@@ -268,7 +307,8 @@ namespace Pharmacy {
 			this->Controls->Add(this->panel2);
 			this->Controls->Add(this->panel1);
 			this->Name = L"MyForm";
-			this->Text = L"MyForm";
+			this->Text = L" ";
+			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 			this->panel1->ResumeLayout(false);
 			this->panel1->PerformLayout();
@@ -278,18 +318,110 @@ namespace Pharmacy {
 			this->ResumeLayout(false);
 
 		}
+
+
+
+
+
+		private: System::Void PharmacyDB()
+		{
+			sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+			sqlConn->Open();
+
+			sqlCmd->Connection = sqlConn;
+
+			sqlCmd->CommandText = "SELECT * FROM users ";
+
+			sqlRd = sqlCmd->ExecuteReader();
+
+			sqlDt->Load(sqlRd);
+
+			sqlRd->Close();
+
+			sqlConn->Close();
+
+		}
+
+
+
+
+
 #pragma endregion
 	private: System::Void pictureBox2_Click(System::Object^ sender, System::EventArgs^ e) {
 	}
+
+
 private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
 
+
+
+	sqlConn->ConnectionString = "datasource=localhost; port=3306; uid=root; pwd=; database=pharmacy";
+
+	sqlConn->Open();
+
+	sqlCmd->Connection = sqlConn;
+
+
+	if (UserNametextBox->Text == "" || PwdtextBox->Text == "") {
+
+			MessageBox::Show("Please enter all details", "", MessageBoxButtons::OK, MessageBoxIcon::Stop);
+			
+
+	}
+
+	else {
+
+
+
+
+
+		try
+		{
+
+
+			sqlCmd->CommandText = "	insert into users (username, password) "  "values ('" + UserNametextBox->Text + "' , '" + PwdtextBox->Text + "')";
+
+
+			sqlCmd->ExecuteNonQuery();
+
+			sqlConn->Close();
+
+			PharmacyDB();
+
+			MessageBox::Show("Successfully created an Admin Account", "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+
+			this->Hide();
+
+			Login^ myLogin = gcnew Login();
+
+			myLogin->ShowDialog();
+
+
+
+
+		}
+
+
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	}
+
 	
-
-	this->Hide();
-
-	Login^ myLogin = gcnew Login();
-
-	myLogin->ShowDialog();
 
 
 	
@@ -298,6 +430,15 @@ private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e
 
 }
 private: System::Void MyForm_Load(System::Object^ sender, System::EventArgs^ e) {
+}
+
+private: System::Void label5_Click(System::Object^ sender, System::EventArgs^ e) {
+
+	this->Hide();
+
+	Login^ myLogin = gcnew Login();
+
+	myLogin->ShowDialog();
 }
 };
 }

@@ -1271,6 +1271,7 @@ namespace Pharmacy {
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"Landingpage";
 			this->Text = L"Landingpage";
+			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->Load += gcnew System::EventHandler(this, &Landingpage::Landingpage_Load);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
@@ -1288,7 +1289,20 @@ namespace Pharmacy {
 		}
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		Application::Exit();
+
+		System::Windows::Forms::DialogResult Ifexit;
+
+		try {
+			Ifexit = MessageBox::Show("Are you sure you want to exit?", "", MessageBoxButtons::YesNo, MessageBoxIcon::Question);
+
+			if (Ifexit == System::Windows::Forms::DialogResult::Yes) {
+				this->Close();
+			};
+		}
+
+		catch (Exception^ ex) {
+			MessageBox::Show(ex->Message, "", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		}
 	}
 private: System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
 
